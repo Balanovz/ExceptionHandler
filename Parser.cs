@@ -1,22 +1,22 @@
-﻿namespace WorkWithExceptions
+namespace WorkWithExceptions
 {
     public class Parser
     {
-        public static double CalculateExpression(double firstOperand, string operation, double secondOperand)
+        private static double CalculateExpression(double firstOperand, char operation, double secondOperand)
         {
-            double result = default;
+            double result;
             switch (operation)
             {
-                case "+":
+                case '+':
                     result = Add(firstOperand, secondOperand);
                     break;
-                case "-":
+                case '-':
                     result = Sub(firstOperand, secondOperand);
                     break;
-                case "*":
+                case '*':
                     result = Mult(firstOperand, secondOperand);
                     break;
-                case "/":
+                case '/':
                     result = Div(firstOperand, secondOperand);
                     break;
                 default:
@@ -24,6 +24,34 @@
             }
             return result;
         }
+
+        public static double LineProcessing(string line)
+        {
+            string firstOperand = "";
+            string secondOperand = "";
+            char operation = default;
+            char[] operationSymbols = { '+', '-', '/', '*' };
+
+            for(int i = 0; i < line.Length / 2; ++i)
+            {
+                if (char.IsNumber(line[i]))
+                    firstOperand += line[i];
+                if (char.IsNumber(line[line.Length - i - 1]))
+                    secondOperand += line[line.Length - i - 1];
+            }
+
+            foreach (var i in line)
+                if (operationSymbols.Contains(i))
+                {
+                    operation = i;
+                    break;
+                }
+                
+            secondOperand.Reverse();
+
+            return CalculateExpression(int.Parse(firstOperand), operation, int.Parse(secondOperand));
+        }
+
         private static double Add(double firstOperand, double secondOperand)
         {
             return firstOperand + secondOperand; 
